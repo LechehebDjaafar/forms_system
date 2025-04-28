@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب استمارة - منصة الأساتذة</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- القائمة الجانبية -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="شعار المنصة">
+            </div>
+            <div class="user-info">
+                <p>مرحبًا، {{ session['name'] }}</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('teacher_home') }}"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="{{ url_for('teacher_profile') }}"><i class="fas fa-user"></i> الملف الشخصي</a></li>
+                <li class="active"><a href="{{ url_for('request_form') }}"><i class="fas fa-file-alt"></i> طلب استمارة</a></li>
+                <li><a href="{{ url_for('teacher_forms') }}"><i class="fas fa-envelope"></i> البريد والاستمارات</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+            </ul>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="content">
+            <div class="header">
+                <h1>طلب استمارة جديدة</h1>
+                <div class="date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+            <!-- رسائل النظام -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                            <span class="close-btn">&times;</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>نموذج طلب استمارة</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('request_form') }}" method="POST">
+                            <div class="form-group">
+                                <label for="form_type">نوع الاستمارة</label>
+                                <select id="form_type" name="form_type" class="form-control" required>
+                                    <option value="" disabled selected>اختر نوع الاستمارة</option>
+                                    <option value="استمارة إجازة">استمارة إجازة</option>
+                                    <option value="استمارة تقييم أداء">استمارة تقييم أداء</option>
+                                    <option value="استمارة بدل مواصلات">استمارة بدل مواصلات</option>
+                                    <option value="استمارة تسجيل غياب">استمارة تسجيل غياب</option>
+                                    <option value="استمارة طلب تدريب">استمارة طلب تدريب</option>
+                                    <option value="استمارة طلب ترقية">استمارة طلب ترقية</option>
+                                    <option value="استمارة شهادة العمل">استمارة شهادة العمل</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reason">سبب الطلب</label>
+                                <textarea id="reason" name="reason" class="form-control" rows="5" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="date">التاريخ المطلوب</label>
+                                <input type="date" id="date" name="date" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-info">
+                                <i class="fas fa-info-circle"></i>
+                                <p>سيتم مراجعة طلبك من قبل الإدارة وإشعارك بالنتيجة في أقرب وقت.</p>
+                            </div>
+                            
+                            <div class="form-buttons">
+                                <button type="submit" class="btn btn-primary">إرسال الطلب</button>
+                                <button type="reset" class="btn btn-secondary">إعادة تعيين</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2>إرشادات ومعلومات</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="guide-section">
+                            <h3><i class="fas fa-clipboard-list"></i> أنواع الاستمارات المتاحة</h3>
+                            <div class="guide-content">
+                                <ul class="guide-list">
+                                    <li>
+                                        <strong>استمارة إجازة:</strong>
+                                        <p>تُستخدم لطلب إجازات سنوية أو مرضية أو طارئة.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة تقييم أداء:</strong>
+                                        <p>تُستخدم للحصول على تقييم أدائك التدريسي من قبل الإدارة.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة بدل مواصلات:</strong>
+                                        <p>تُستخدم لطلب تعويض عن نفقات التنقل والمواصلات.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة تسجيل غياب:</strong>
+                                        <p>تُستخدم لتسجيل الغياب وتوضيح أسبابه للإدارة.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة طلب تدريب:</strong>
+                                        <p>تُستخدم لطلب المشاركة في دورات تدريبية أو ورش عمل.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة طلب ترقية:</strong>
+                                        <p>تُستخدم للتقدم بطلب ترقية أو تغيير في المسمى الوظيفي.</p>
+                                    </li>
+                                    <li>
+                                        <strong>استمارة شهادة العمل:</strong>
+                                        <p> كل استاذ له الحق في شهادة العمل</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="guide-section">
+                            <h3><i class="fas fa-exclamation-triangle"></i> ملاحظات هامة</h3>
+                            <div class="guide-content">
+                                <ul class="guide-list">
+                                    <li>يجب تقديم طلب الاستمارة قبل الموعد المطلوب بـ 3 أيام عمل على الأقل.</li>
+                                    <li>يرجى توضيح سبب الطلب بشكل مفصل لتسهيل المراجعة واتخاذ القرار المناسب.</li>
+                                    <li>يمكنك متابعة حالة طلبك من خلال صفحة "البريد والاستمارات".</li>
+                                    <li>في حال تم رفض طلبك، ستجد ملاحظات الإدارة توضح سبب الرفض.</li>
+                                    <li>يمكنك تنزيل الاستمارات المعتمدة من خلال صفحة "البريد والاستمارات".</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // عرض التاريخ الحالي
+        document.addEventListener('DOMContentLoaded', function() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('ar-SA', options);
+            document.getElementById('current-date').textContent = today;
+            
+            // إغلاق رسائل التنبيه
+            const closeButtons = document.querySelectorAll('.close-btn');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.parentElement.style.display = 'none';
+                });
+            });
+            
+            // تعيين الحد الأدنى للتاريخ إلى اليوم
+            const dateInput = document.getElementById('date');
+            const today_iso = new Date().toISOString().split('T')[0];
+            dateInput.setAttribute('min', today_iso);
+        });
+    </script>
+</body>
+</html>

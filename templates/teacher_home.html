@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة الرئيسية - منصة الأساتذة</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="main-container">
+        <!-- القائمة الجانبية -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="شعار المنصة">
+            </div>
+            <div class="user-info">
+                <p>مرحبًا، {{ teacher['name'] }}</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="active"><a href="{{ url_for('teacher_home') }}"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="{{ url_for('teacher_profile') }}"><i class="fas fa-user"></i> الملف الشخصي</a></li>
+                <li><a href="{{ url_for('request_form') }}"><i class="fas fa-file-alt"></i> طلب استمارة</a></li>
+                <li><a href="{{ url_for('teacher_forms') }}"><i class="fas fa-envelope"></i> البريد والاستمارات</a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+            </ul>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="content">
+            <div class="header">
+                <h1>لوحة التحكم الرئيسية</h1>
+                <div class="date">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+            <!-- رسائل النظام -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                            <span class="close-btn">&times;</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- بطاقات الإحصائيات -->
+            <div class="stats-container">
+                <div class="stats-card">
+                    <div class="stats-icon bg-primary">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ stats['total_forms'] }}</h3>
+                        <p>مجموع الاستمارات</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ stats['approved_forms'] }}</h3>
+                        <p>استمارات معتمدة</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ stats['pending_forms'] }}</h3>
+                        <p>قيد المراجعة</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-icon bg-danger">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stats-info">
+                        <h3>{{ stats['rejected_forms'] }}</h3>
+                        <p>استمارات مرفوضة</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- معلومات الأستاذ -->
+            <div class="teacher-info-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>معلوماتي الشخصية</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="teacher-profile-info">
+                            <div class="profile-image">
+                                <i class="fas fa-user-circle fa-5x"></i>
+                            </div>
+                            <div class="profile-details">
+                                <h3>{{ teacher['name'] }}</h3>
+                                <ul class="years-taught">
+                                    {% for year in teacher['years_taught'].split(',') %}
+                                        <li>{{ year.strip() }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% if teacher['email'] %}
+                                <p><i class="fas fa-envelope"></i> {{ teacher['email'] }}</p>
+                                {% endif %}
+                                {% if teacher['phone'] %}
+                                <p><i class="fas fa-phone"></i> {{ teacher['phone'] }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- آخر الاستمارات المعتمدة -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>آخر الاستمارات المعتمدة</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_approved|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>نوع الاستمارة</th>
+                                                <th>تاريخ الطلب</th>
+                                                <th>تاريخ الاعتماد</th>
+                                                <th>إجراءات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for form in recent_approved %}
+                                                <tr>
+                                                    <td>{{ form['id'] }}</td>
+                                                    <td>{{ form['form_type'] }}</td>
+                                                    <td>{{ form['date'] }}</td>
+                                                    <td>{{ form['approval_date'] }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('download_form', form_id=form['id']) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-download"></i> تنزيل
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <i class="fas fa-file-alt fa-3x"></i>
+                                    <p>لا توجد استمارات معتمدة حتى الآن</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- آخر طلبات الاستمارات -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>آخر طلبات الاستمارات</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_requests|length > 0 %}
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>نوع الاستمارة</th>
+                                                <th>تاريخ الطلب</th>
+                                                <th>الحالة</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for form in recent_requests %}
+                                                <tr>
+                                                    <td>{{ form['id'] }}</td>
+                                                    <td>{{ form['form_type'] }}</td>
+                                                    <td>{{ form['date'] }}</td>
+                                                    <td>
+                                                        {% if form['status'] == 'pending' %}
+                                                            <span class="badge badge-warning">قيد المراجعة</span>
+                                                        {% elif form['status'] == 'approved' %}
+                                                            <span class="badge badge-success">تمت الموافقة</span>
+                                                        {% elif form['status'] == 'rejected' %}
+                                                            <span class="badge badge-danger">تم الرفض</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="view-all-link">
+                                    <a href="{{ url_for('teacher_forms') }}">عرض جميع الاستمارات <i class="fas fa-arrow-left"></i></a>
+                                </div>
+                            {% else %}
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox fa-3x"></i>
+                                    <p>لا توجد طلبات استمارات حتى الآن</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- رسم بياني للإحصائيات -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h2>إحصائيات الاستمارات</h2>
+                </div>
+                <div class="card-body">
+                    <canvas id="statsChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script>
+        // عرض التاريخ الحالي
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('ar-SA', options);
+
+        // إغلاق رسائل التنبيه
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+            });
+        });
+
+        // رسم بياني للإحصائيات
+        fetch('/api/stats')
+            .then(response => response.json())
+            .then(data => {
+                const ctx = document.getElementById('statsChart').getContext('2d');
+                
+                const labels = data.map(item => item.form_type);
+                const approvedData = data.map(item => item.approved);
+                const pendingData = data.map(item => item.pending);
+                const rejectedData = data.map(item => item.rejected);
+                
+                const chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'تمت الموافقة',
+                                data: approvedData,
+                                backgroundColor: '#28a745',
+                            },
+                            {
+                                label: 'قيد المراجعة',
+                                data: pendingData,
+                                backgroundColor: '#ffc107',
+                            },
+                            {
+                                label: 'تم الرفض',
+                                data: rejectedData,
+                                backgroundColor: '#dc3545',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                stacked: true,
+                            }],
+                            yAxes: [{
+                                stacked: true,
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

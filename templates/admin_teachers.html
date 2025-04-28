@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الاساتذه</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="شعار النظام">
+                <h2>نظام الاساتذه</h2>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{{ url_for('admin_teachers') }}">
+                        <i class="fas fa-user-tie"></i>
+                        <span>الاساتذه</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_forms') }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span>الاستمارات</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <h1>إدارة الاساتذه</h1>
+                <div class="user-info">
+                    <span>{{ session.name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="action-bar">
+                <a href="{{ url_for('admin_create_teacher') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> إضافة معلم جديد
+                </a>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th>اسم المستخدم</th>
+                            <th>الاسم الكامل</th>
+                            <th>البريد الإلكتروني</th>
+                            <th>رقم الهاتف</th>
+                            <th>عدد الاستمارات</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if teachers %}
+                            {% for teacher in teachers %}
+                                <tr>
+                                    <td>{{ teacher.id }}</td>
+                                    <td>{{ teacher.username }}</td>
+                                    <td>{{ teacher.name }}</td>
+                                    <td>{{ teacher.email or 'غير متوفر' }}</td>
+                                    <td>{{ teacher.phone or 'غير متوفر' }}</td>
+                                    <td>{{ teacher.form_count }}</td>
+                                    <td class="actions">
+                                        <a href="{{ url_for('admin_edit_teacher', teacher_id=teacher.id) }}" class="action-btn">
+                                            <i class="fas fa-edit"></i> تعديل
+                                        </a>
+                                        <form method="POST" action="{{ url_for('admin_delete_teacher', teacher_id=teacher.id) }}" class="delete-form" onsubmit="return confirm('هل أنت متأكد من رغبتك في حذف هذا المعلم وجميع طلباته؟');">
+                                            <button type="submit" class="action-btn delete">
+                                                <i class="fas fa-trash"></i> حذف
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8">لا يوجد معلمين مسجلين في النظام</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

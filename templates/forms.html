@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}الاستمارات - منصة الأساتذة{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/forms.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="forms-container">
+    <h2>الاستمارات</h2>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'available-forms')">الاستمارات المتاحة</button>
+        <button class="tab-btn" onclick="openTab(event, 'my-requests')">طلباتي</button>
+    </div>
+    
+    <div id="available-forms" class="tab-content active">
+        <h3>الاستمارات المتاحة للطلب</h3>
+        
+        <div class="forms-grid">
+            {% for form in forms %}
+            <div class="form-card">
+                <h4>{{ form.name }}</h4>
+                <p>{{ form.description }}</p>
+                <button class="btn-primary request-form" data-form-id="{{ form.id }}" data-form-name="{{ form.name }}">طلب الاستمارة</button>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- نموذج طلب الاستمارة (مخفي بشكل افتراضي) -->
+        <div id="request-form-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>طلب استمارة: <span id="form-name"></span></h3>
+                
+                <form id="request-form" method="POST" action="{{ url_for('request_form') }}">
+                    <input type="hidden" id="form_id" name="form_id">
+                    
+                    <div class="form-group">
+                        <label for="reason">سبب الطلب</label>
+                        <textarea id="reason" name="reason" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="needed_by_date">التاريخ المطلوب</label>
+                        <input type="date" id="needed_by_date" name="needed_by_date" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">إرسال الطلب</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="my-requests" class="tab-content">
+        <h3>طلباتي</h3>
+        
+        <div class="requests-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاستمارة</th>
+                        <th>تاريخ الطلب</th>
+                        <th>التاريخ المطلوب</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in form_requests %}
+                    <tr>
+                        <td>{{ request.form.name }}</td>
+                        <td>{{ request.request_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ request.needed_by_date.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            {% if request.status == 'pending' %}
+                            <span class="badge pending">قيد الانتظار</span>
+                            {% elif request.status == 'approved' %}
+                            <span class="badge approved">تمت الموافقة</span>
+                            {% else %}
+                            <span class="badge rejected">مرفوض</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn-secondary view-details" data-request-id="{{ request.id }}">التفاصيل</button>
+                            {% if request.status == 'approved' %}
+                            <a href="{{ url_for('static', filename=request.form.file_path) }}" class="btn-primary" target="_blank">تنزيل</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- نموذج تفاصيل الطلب (مخفي بشكل افتراضي) -->
+        <div id="request-details-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>تفاصيل الطلب</h3>
+                
+                <div id="request-details">
+                    <!-- سيتم ملء هذا بواسطة JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - منصة الأساتذة</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="شعار المنصة">
+        </div>
+        
+        <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+        
+        <h2>مرحبًا، {{ teacher[3] }}</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <h3><i class="fas fa-user"></i> معلوماتك الشخصية</h3>
+        <div class="info-box">
+            <p><strong>الاسم:</strong> {{ teacher[3] }}</p>
+            <p><strong>السنوات التي تدرسها:</strong> {{ teacher[4] }}</p>
+        </div>
+
+        <h3><i class="fas fa-file-alt"></i> طلب استمارة جديدة</h3>
+        <form action="/request_form" method="POST">
+            <label for="form_type">نوع الاستمارة:</label>
+            <select id="form_type" name="form_type" required>
+                <option value="" disabled selected>-- اختر نوع الاستمارة --</option>
+                <option value="استمارة غياب">استمارة غياب</option>
+                <option value="استمارة إذن">استمارة إذن</option>
+                <option value="استمارة تقييم">استمارة تقييم</option>
+                <option value="استمارة طلب مواد">استمارة طلب مواد تعليمية</option>
+                <option value="استمارة أخرى">استمارة أخرى</option>
+            </select>
+
+            <label for="reason">سبب الطلب:</label>
+            <textarea id="reason" name="reason" rows="4" required></textarea>
+
+            <label for="date">تاريخ الاستلام المطلوب:</label>
+            <input type="date" id="date" name="date" required>
+
+            <button type="submit"><i class="fas fa-paper-plane"></i> إرسال الطلب</button>
+        </form>
+
+        <h3><i class="fas fa-inbox"></i> صندوق البريد</h3>
+        <div class="messages-box">
+            {% if form_requests %}
+                {% for request in form_requests %}
+                    <div class="message-item">
+                        <span class="message-status status-{{ request.status }}">{{ request.status_text }}</span>
+                        <p><strong>نوع الاستمارة:</strong> {{ request.form_type }}</p>
+                        <p><strong>تاريخ الطلب:</strong> {{ request.date }}</p>
+                        {% if request.status == 'approved' %}
+                            <a href="/download_form/{{ request.id }}" class="form-download-btn"><i class="fas fa-download"></i> تنزيل الاستمارة</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>لا توجد طلبات أو رسائل.</p>
+            {% endif %}
+        </div>
+        
+        {% if approved_forms %}
+            <h3><i class="fas fa-check-circle"></i> الاستمارات المعتمدة</h3>
+            <div class="forms-section">
+                {% for form in approved_forms %}
+                    <div class="message-item">
+                        <p><strong>{{ form.form_type }}</strong> - تم اعتمادها بتاريخ {{ form.approval_date }}</p>
+                        <a href="/download_form/{{ form.id }}" class="form-download-btn"><i class="fas fa-download"></i> تنزيل الاستمارة</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // JavaScript للتحقق من صحة التاريخ المدخل
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const selectedDate = new Date(document.getElementById('date').value);
+            const today = new Date();
+            
+            if (selectedDate < today) {
+                e.preventDefault();
+                alert('يرجى اختيار تاريخ مستقبلي للاستلام');
+            }
+        });
+    </script>
+</body>
+</html>

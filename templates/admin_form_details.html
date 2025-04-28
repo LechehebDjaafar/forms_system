@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الاستمارة</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="شعار النظام">
+                <h2>نظام الاساتذه</h2>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_teachers') }}">
+                        <i class="fas fa-user-tie"></i>
+                        <span>الاساتذه</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{{ url_for('admin_forms') }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span>الاستمارات</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div class="breadcrumb">
+                    <a href="{{ url_for('admin_forms') }}">
+                        <i class="fas fa-chevron-right"></i> الاستمارات
+                    </a>
+                    <span>تفاصيل الاستمارة #{{ form.id }}</span>
+                </div>
+                <div class="user-info">
+                    <span>{{ session.name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>تفاصيل الاستمارة #{{ form.id }}</h2>
+                    <div class="status-badge
+                        {% if form.status == 'pending' %}status-pending
+                        {% elif form.status == 'approved' %}status-approved
+                        {% elif form.status == 'rejected' %}status-rejected{% endif %}">
+                        {% if form.status == 'pending' %}قيد المراجعة
+                        {% elif form.status == 'approved' %}تمت الموافقة
+                        {% elif form.status == 'rejected' %}تم الرفض{% endif %}
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-details">
+                        <div class="details-section">
+                            <h3>معلومات الاساتذه</h3>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span class="detail-label">اسم الاساتذه:</span>
+                                    <span class="detail-value">{{ form.teacher_name }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">الصفوف التي يدرسها:</span>
+                                    <span class="detail-value">{{ form.years_taught }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="details-section">
+                            <h3>معلومات الاستمارة</h3>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span class="detail-label">نوع الاستمارة:</span>
+                                    <span class="detail-value">{{ form.form_type }}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">تاريخ الطلب:</span>
+                                    <span class="detail-value">{{ form.date }}</span>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-item full-width">
+                                    <span class="detail-label">سبب الطلب:</span>
+                                    <span class="detail-value">{{ form.reason }}</span>
+                                </div>
+                            </div>
+                            {% if form.approval_date %}
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span class="detail-label">تاريخ الاعتماد:</span>
+                                    <span class="detail-value">{{ form.approval_date }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <form method="POST" action="{{ url_for('admin_form_details', form_id=form.id) }}" class="form-action">
+                            <div class="details-section">
+                                <h3>تحديث حالة الطلب</h3>
+                                <div class="detail-row">
+                                    <div class="form-group">
+                                        <label for="status">الحالة:</label>
+                                        <select name="status" id="status" class="form-control" required>
+                                            <option value="pending" {% if form.status == 'pending' %}selected{% endif %}>قيد المراجعة</option>
+                                            <option value="approved" {% if form.status == 'approved' %}selected{% endif %}>موافقة</option>
+                                            <option value="rejected" {% if form.status == 'rejected' %}selected{% endif %}>رفض</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="form-group full-width">
+                                        <label for="admin_notes">ملاحظات الإدارة:</label>
+                                        <textarea name="admin_notes" id="admin_notes" class="form-control" rows="4">{{ form.admin_notes }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="actions-row">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> حفظ التغييرات
+                                    </button>
+                                    {% if form.status == 'approved' %}
+                                    <a href="{{ url_for('download_form', form_id=form.id) }}" class="btn btn-success">
+                                        <i class="fas fa-download"></i> تنزيل الاستمارة
+                                    </a>
+                                    {% endif %}
+                                    <a href="{{ url_for('admin_forms') }}" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-right"></i> العودة للقائمة
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

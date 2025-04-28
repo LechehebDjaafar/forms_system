@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}منصة الأساتذة{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="logo">
+                <h1>منصة الأساتذة</h1>
+            </div>
+            <div class="user-info">
+                {% if 'user_id' in session %}
+                <span>مرحباً، {{ teacher.name }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">تسجيل الخروج</a>
+                {% endif %}
+            </div>
+        </header>
+        
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('dashboard') }}">الرئيسية</a></li>
+                <li><a href="{{ url_for('profile') }}">الملف الشخصي</a></li>
+                <li><a href="{{ url_for('forms') }}">الاستمارات</a></li>
+                <li>
+                    <a href="{{ url_for('mail') }}">البريد
+                    {% if unread_messages > 0 %}
+                    <span class="badge">{{ unread_messages }}</span>
+                    {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <main>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+        
+        <footer>
+            <p>جميع الحقوق محفوظة &copy; {{ current_year }} - منصة الأساتذة</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

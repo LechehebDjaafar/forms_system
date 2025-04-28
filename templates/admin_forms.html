@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الاستمارات</title>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/static/images/logo.png" alt="شعار النظام">
+                <h2>نظام الاساتذه</h2>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('admin_teachers') }}">
+                        <i class="fas fa-user-tie"></i>
+                        <span>الاساتذه</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{{ url_for('admin_forms') }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span>الاستمارات</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <h1>إدارة الاستمارات</h1>
+                <div class="user-info">
+                    <span>{{ session.name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label>تصفية حسب الحالة:</label>
+                    <div class="tabs">
+                        <a href="{{ url_for('admin_forms', status='all') }}" class="tab {{ 'active' if status_filter == 'all' else '' }}">الكل</a>
+                        <a href="{{ url_for('admin_forms', status='pending') }}" class="tab {{ 'active' if status_filter == 'pending' else '' }}">قيد المراجعة</a>
+                        <a href="{{ url_for('admin_forms', status='approved') }}" class="tab {{ 'active' if status_filter == 'approved' else '' }}">تمت الموافقة</a>
+                        <a href="{{ url_for('admin_forms', status='rejected') }}" class="tab {{ 'active' if status_filter == 'rejected' else '' }}">تم الرفض</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>الرقم</th>
+                            <th>نوع الاستمارة</th>
+                            <th>الاستاذ</th>
+                            <th>التاريخ</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if form_requests %}
+                            {% for form in form_requests %}
+                                <tr>
+                                    <td>{{ form.id }}</td>
+                                    <td>{{ form.form_type }}</td>
+                                    <td>{{ form.teacher_name }}</td>
+                                    <td>{{ form.date }}</td>
+                                    <td>
+                                        {% if form.status == 'pending' %}
+                                            <span class="status-pending">قيد المراجعة</span>
+                                        {% elif form.status == 'approved' %}
+                                            <span class="status-approved">تمت الموافقة</span>
+                                        {% elif form.status == 'rejected' %}
+                                            <span class="status-rejected">تم الرفض</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="actions">
+                                        <a href="{{ url_for('admin_form_details', form_id=form.id) }}" class="btn btn-info">
+                                            <i class="fas fa-eye"></i> عرض
+                                        </a>
+                                        {% if form.status == 'approved' %}
+                                            <a href="{{ url_for('download_form', form_id=form.id) }}" class="btn btn-success">
+                                                <i class="fas fa-download"></i> تنزيل
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="no-data">لا توجد طلبات استمارات متاحة</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

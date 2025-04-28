@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}البريد - منصة الأساتذة{% endblock %}
+
+{% block content %}
+<div class="mail-container">
+    <h2>البريد</h2>
+    
+    {% if messages %}
+    <div class="mail-list">
+        {% for message in messages %}
+        <div class="mail-item {% if not message.read %}unread{% endif %}">
+            <div class="mail-header" onclick="toggleMailContent({{ message.id }})">
+                <div class="mail-info">
+                    <h4>{{ message.subject }}</h4>
+                    <span class="mail-date">{{ message.date.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                <div class="mail-status">
+                    {% if not message.read %}
+                    <span class="badge">جديد</span>
+                    {% endif %}
+                    <span class="toggle-icon">▼</span>
+                </div>
+            </div>
+            <div class="mail-content" id="mail-content-{{ message.id }}">
+                {{ message.content|safe }}
+                
+                {% if "form_request_id" in message.content %}
+                <div class="mail-actions">
+                    <a href="{{ url_for('forms') }}" class="btn-primary">عرض الطلبات</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-mail">
+        <p>لا توجد رسائل في البريد الخاص بك.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function toggleMailContent(messageId) {
+    const contentElement = document.getElementById(`mail-content-${messageId}`);
+    const headerElement = contentElement.previousElementSibling;
+    const toggleIcon = headerElement.querySelector('.toggle-icon');
+    
+    if (contentElement.style.display === 'block') {
+        contentElement.style.display = 'none';
+        toggleIcon.textContent = '▼';
+    } else {
+        contentElement.style.display = 'block';
+        toggleIcon.textContent = '▲';
+    }
+}
+</script>
+{% endblock %}
