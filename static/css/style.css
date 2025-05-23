@@ -1,15 +1,15 @@
 /* === الإعدادات العامة === */
 :root {
-  --primary-color: #2c5282;
-  --secondary-color: #4299e1;
-  --success-color: #48bb78;
-  --warning-color: #f6ad55;
-  --danger-color: #e53e3e;
-  --light-color: #f7fafc;
-  --dark-color: #2d3748;
-  --gray-color: #a0aec0;
-  --border-color: #e2e8f0;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --primary-color: #218c5a;         /* أخضر رئيسي */
+  --secondary-color: #43b97f;       /* أخضر فاتح */
+  --success-color: #48bb78;         /* أخضر نجاح */
+  --warning-color: #f6e05e;         /* أصفر فاتح متناسق مع الأخضر */
+  --danger-color: #e53e3e;          /* أحمر للخطر */
+  --light-color: #f4fff8;           /* أخضر فاتح جداً */
+  --dark-color: #1b3a2b;            /* أخضر غامق */
+  --gray-color: #8fa89b;            /* رمادي مخضر */
+  --border-color: #d2e6db;          /* حدود مخضرة */
+  --shadow-color: rgba(33, 140, 90, 0.08); /* ظل أخضر شفاف */
 }
 
 * {

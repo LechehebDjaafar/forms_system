@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم المدير</title>
+    <title>واجهة الادارة</title>
     <link rel="stylesheet" href="/static/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,7 +12,7 @@
         <div class="sidebar">
             <div class="logo">
                 <img src="/static/images/logo.png" alt="شعار النظام">
-                <h2>نظام الاساتذه</h2>
+                <h2>واجهة الادارة</h2>
             </div>
             <ul class="nav-links">
                 <li class="active">
@@ -24,13 +24,13 @@
                 <li>
                     <a href="{{ url_for('admin_teachers') }}">
                         <i class="fas fa-user-tie"></i>
-                        <span>الاساتذه</span>
+                        <span>الموظفين</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin_forms') }}">
                         <i class="fas fa-file-alt"></i>
-                        <span>الاستمارات</span>
+                        <span>وثائق</span>
                     </a>
                 </li>
                 <li>
@@ -44,7 +44,7 @@
 
         <div class="main-content">
             <div class="header">
-                <h1>لوحة تحكم المدير</h1>
+                <h1>لوحة تحكم الادارة</h1>
                 <div class="user-info">
                     <span>{{ session.name }}</span>
                     <i class="fas fa-user-circle"></i>
@@ -65,7 +65,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="number">{{ teacher_count }}</div>
-                        <div class="card-name">إجمالي الاساتذه</div>
+                        <div class="card-name">إجمالي الموظفين</div>
                     </div>
                     <div class="icon">
                         <i class="fas fa-user-tie"></i>
@@ -75,7 +75,7 @@
                 <div class="card">
                     <div class="card-content">
                         <div class="number">{{ stats.total_forms }}</div>
-                        <div class="card-name">إجمالي الاستمارات</div>
+                        <div class="card-name">إجمالي وثائق</div>
                     </div>
                     <div class="icon">
                         <i class="fas fa-file-alt"></i>

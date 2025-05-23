@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الاساتذه</title>
+    <title>إدارة الموظفين</title>
     <link rel="stylesheet" href="/static/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,7 +12,7 @@
         <div class="sidebar">
             <div class="logo">
                 <img src="/static/images/logo.png" alt="شعار النظام">
-                <h2>نظام الاساتذه</h2>
+                <h2>نظام الموظفين</h2>
             </div>
             <ul class="nav-links">
                 <li>
@@ -24,13 +24,13 @@
                 <li class="active">
                     <a href="{{ url_for('admin_teachers') }}">
                         <i class="fas fa-user-tie"></i>
-                        <span>الاساتذه</span>
+                        <span>الموظفين</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin_forms') }}">
                         <i class="fas fa-file-alt"></i>
-                        <span>الاستمارات</span>
+                        <span>وثائق</span>
                     </a>
                 </li>
                 <li>
@@ -44,7 +44,7 @@
 
         <div class="main-content">
             <div class="header">
-                <h1>إدارة الاساتذه</h1>
+                <h1>إدارة الموظفين</h1>
                 <div class="user-info">
                     <span>{{ session.name }}</span>
                     <i class="fas fa-user-circle"></i>
@@ -63,7 +63,7 @@
 
             <div class="action-bar">
                 <a href="{{ url_for('admin_create_teacher') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> إضافة معلم جديد
+                    <i class="fas fa-plus"></i> إضافة الموظف جديد
                 </a>
             </div>
 
@@ -76,7 +76,7 @@
                             <th>الاسم الكامل</th>
                             <th>البريد الإلكتروني</th>
                             <th>رقم الهاتف</th>
-                            <th>عدد الاستمارات</th>
+                            <th>عدد وثائق</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>

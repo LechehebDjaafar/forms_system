@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, flash, session
 from datetime import datetime
 from models import Teacher, Form, FormRequest, Message
-from app import app, db
+from teacher_form2 import app, db
 from werkzeug.security import check_password_hash
 
 @app.route('/')

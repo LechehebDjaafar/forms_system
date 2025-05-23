@@ -12,7 +12,7 @@
         <div class="sidebar">
             <div class="logo">
                 <img src="/static/images/logo.png" alt="شعار النظام">
-                <h2>نظام الاساتذه</h2>
+                <h2>نظام الموظفين</h2>
             </div>
             <ul class="nav-links">
                 <li>
@@ -24,13 +24,13 @@
                 <li class="active">
                     <a href="{{ url_for('admin_teachers') }}">
                         <i class="fas fa-user-tie"></i>
-                        <span>الاساتذه</span>
+                        <span>الموظفين</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ url_for('admin_forms') }}">
                         <i class="fas fa-file-alt"></i>
-                        <span>الاستمارات</span>
+                        <span>وثائق</span>
                     </a>
                 </li>
                 <li>
@@ -44,7 +44,7 @@
 
         <div class="main-content">
             <div class="header">
-                <h1>تعديل بيانات الاستاذ - {{ teacher.name }}</h1>
+                <h1>تعديل بيانات الموظف - {{ teacher.name }}</h1>
                 <div class="user-info">
                     <span>{{ session.name }}</span>
                     <i class="fas fa-user-circle"></i>

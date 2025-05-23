@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}الاستمارات - منصة الأساتذة{% endblock %}
+{% block title %}وثائق - منصة الأساتذة{% endblock %}
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/forms.js') }}"></script>
@@ -8,15 +8,15 @@
 
 {% block content %}
 <div class="forms-container">
-    <h2>الاستمارات</h2>
+    <h2>وثائق</h2>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'available-forms')">الاستمارات المتاحة</button>
+        <button class="tab-btn active" onclick="openTab(event, 'available-forms')">وثائق المتاحة</button>
         <button class="tab-btn" onclick="openTab(event, 'my-requests')">طلباتي</button>
     </div>
     
     <div id="available-forms" class="tab-content active">
-        <h3>الاستمارات المتاحة للطلب</h3>
+        <h3>وثائق المتاحة للطلب</h3>
         
         <div class="forms-grid">
             {% for form in forms %}

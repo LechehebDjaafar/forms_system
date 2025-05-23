@@ -12,7 +12,7 @@
         <div class="sidebar">
             <div class="logo">
                 <img src="/static/images/logo.png" alt="شعار النظام">
-                <h2>نظام الاساتذه</h2>
+                <h2>نظام الموظفين</h2>
             </div>
             <ul class="nav-links">
                 <li>
@@ -24,13 +24,13 @@
                 <li>
                     <a href="{{ url_for('admin_teachers') }}">
                         <i class="fas fa-user-tie"></i>
-                        <span>الاساتذه</span>
+                        <span>الموظفين</span>
                     </a>
                 </li>
                 <li class="active">
                     <a href="{{ url_for('admin_forms') }}">
                         <i class="fas fa-file-alt"></i>
-                        <span>الاستمارات</span>
+                        <span>وثائق</span>
                     </a>
                 </li>
                 <li>
@@ -46,7 +46,7 @@
             <div class="header">
                 <div class="breadcrumb">
                     <a href="{{ url_for('admin_forms') }}">
-                        <i class="fas fa-chevron-right"></i> الاستمارات
+                        <i class="fas fa-chevron-right"></i> وثائق
                     </a>
                     <span>تفاصيل الاستمارة #{{ form.id }}</span>
                 </div>
@@ -81,10 +81,10 @@
                 <div class="card-body">
                     <div class="form-details">
                         <div class="details-section">
-                            <h3>معلومات الاساتذه</h3>
+                            <h3>معلومات الموظفين</h3>
                             <div class="detail-row">
                                 <div class="detail-item">
-                                    <span class="detail-label">اسم الاساتذه:</span>
+                                    <span class="detail-label">اسم الموظفين:</span>
                                     <span class="detail-value">{{ form.teacher_name }}</span>
                                 </div>
                                 <div class="detail-item">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طلب استمارة - منصة الأساتذة</title>
+    <title>طلب استمارة - منصة الموظفين</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -22,7 +22,7 @@
                 <li><a href="{{ url_for('teacher_home') }}"><i class="fas fa-home"></i> الرئيسية</a></li>
                 <li><a href="{{ url_for('teacher_profile') }}"><i class="fas fa-user"></i> الملف الشخصي</a></li>
                 <li class="active"><a href="{{ url_for('request_form') }}"><i class="fas fa-file-alt"></i> طلب استمارة</a></li>
-                <li><a href="{{ url_for('teacher_forms') }}"><i class="fas fa-envelope"></i> البريد والاستمارات</a></li>
+                <li><a href="{{ url_for('teacher_forms') }}"><i class="fas fa-envelope"></i> البريد ووثائق</a></li>
                 <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
             </ul>
         </div>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="card-body">
                         <div class="guide-section">
-                            <h3><i class="fas fa-clipboard-list"></i> أنواع الاستمارات المتاحة</h3>
+                            <h3><i class="fas fa-clipboard-list"></i> أنواع وثائق المتاحة</h3>
                             <div class="guide-content">
                                 <ul class="guide-list">
                                     <li>
@@ -128,7 +128,7 @@
                                     </li>
                                     <li>
                                         <strong>استمارة شهادة العمل:</strong>
-                                        <p> كل استاذ له الحق في شهادة العمل</p>
+                                        <p> كل الموظف  له الحق في شهادة العمل</p>
                                     </li>
                                 </ul>
                             </div>
@@ -140,9 +140,9 @@
                                 <ul class="guide-list">
                                     <li>يجب تقديم طلب الاستمارة قبل الموعد المطلوب بـ 3 أيام عمل على الأقل.</li>
                                     <li>يرجى توضيح سبب الطلب بشكل مفصل لتسهيل المراجعة واتخاذ القرار المناسب.</li>
-                                    <li>يمكنك متابعة حالة طلبك من خلال صفحة "البريد والاستمارات".</li>
+                                    <li>يمكنك متابعة حالة طلبك من خلال صفحة "البريد ووثائق".</li>
                                     <li>في حال تم رفض طلبك، ستجد ملاحظات الإدارة توضح سبب الرفض.</li>
-                                    <li>يمكنك تنزيل الاستمارات المعتمدة من خلال صفحة "البريد والاستمارات".</li>
+                                    <li>يمكنك تنزيل وثائق المعتمدة من خلال صفحة "البريد ووثائق".</li>
                                 </ul>
                             </div>
                         </div>
